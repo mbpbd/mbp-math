@@ -1,0 +1,96 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: 'Hind Siliguri', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+/* Ensure crystal clear text visibility in all input elements in both themes */
+input, textarea, select {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #64748b !important;
+}
+
+.dark input, .dark textarea, .dark select {
+  color: #f8fafc !important;
+  background-color: #0f172a !important;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Print Specific Rules — Exact A4 Dimensions Without Any Outer Border/Background */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1.5mm;
+  }
+
+  html, body, #root, .dark {
+    width: 210mm !important;
+    height: auto !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print-scale-reset {
+    transform: none !important;
+  }
+
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    gap: 0 !important;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .a4-sheet {
+    width: 100% !important;
+    max-width: 206mm !important;
+    height: 291mm !important;
+    max-height: 291mm !important;
+    margin: 0 auto !important;
+    padding: 1mm !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  .a4-sheet-wrapper:last-child .a4-sheet {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .a4-landscape-cert {
+    width: 287mm !important;
+    height: 200mm !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+  }
+}

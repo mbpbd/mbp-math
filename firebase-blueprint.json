@@ -1,0 +1,219 @@
+{
+  "entities": {
+    "Setting": {
+      "title": "Setting",
+      "description": "Contest settings record containing dates, fees, venue defaults, and toggles.",
+      "type": "object",
+      "properties": {
+        "contestNameBn": { "type": "string" },
+        "contestNameEn": { "type": "string" },
+        "organiserBn": { "type": "string" },
+        "organiserEn": { "type": "string" },
+        "yearCode": { "type": "string", "maxLength": 4 },
+        "registrationOpens": { "type": "string" },
+        "registrationCloses": { "type": "string" },
+        "quizDateTime": { "type": "string" },
+        "registrationFee": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "bkashNumber": { "type": "string" },
+        "bkashAccountName": { "type": "string" },
+        "helplines": { "type": "string" },
+        "facebookPage": { "type": "string" },
+        "onlineSerialStart": { "type": "number" },
+        "serialDigits": { "type": "number" },
+        "resultsPublished": { "type": "boolean" },
+        "resultsPublishAt": { "type": "string" },
+        "seatPlanPublished": { "type": "boolean" },
+        "showWinnersList": { "type": "boolean" },
+        "certDownloadEnabled": { "type": "boolean" },
+        "altVerifyByFather": { "type": "boolean" }
+      },
+      "required": ["contestNameBn", "yearCode", "registrationFee", "resultsPublished"]
+    },
+    "PublicSetting": {
+      "title": "PublicSetting",
+      "description": "Sanitized public subset of contest settings.",
+      "type": "object",
+      "properties": {
+        "contestNameBn": { "type": "string" },
+        "contestNameEn": { "type": "string" },
+        "organiserBn": { "type": "string" },
+        "yearCode": { "type": "string" },
+        "registrationOpens": { "type": "string" },
+        "registrationCloses": { "type": "string" },
+        "quizDateTime": { "type": "string" },
+        "registrationFee": { "type": "number" },
+        "bkashNumber": { "type": "string" },
+        "bkashAccountName": { "type": "string" },
+        "helplines": { "type": "string" },
+        "facebookPage": { "type": "string" },
+        "resultsPublished": { "type": "boolean" },
+        "resultsPublishAt": { "type": "string" },
+        "seatPlanPublished": { "type": "boolean" },
+        "showWinnersList": { "type": "boolean" },
+        "certDownloadEnabled": { "type": "boolean" }
+      },
+      "required": ["contestNameBn", "yearCode", "resultsPublished"]
+    },
+    "Venue": {
+      "title": "Venue",
+      "description": "Contest examination center.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "address": { "type": "string" },
+        "mapUrl": { "type": "string" },
+        "contactPerson": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "rooms": { "type": "array" }
+      },
+      "required": ["name", "address"]
+    },
+    "School": {
+      "title": "School",
+      "description": "Participating educational institution.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "upazila": { "type": "string" },
+        "venueId": { "type": "string" },
+        "pinHash": { "type": "string" },
+        "formsNeeded": { "type": "object" },
+        "lastReportAt": { "type": "string" }
+      },
+      "required": ["name", "venueId", "pinHash"]
+    },
+    "Block": {
+      "title": "Block",
+      "description": "Continuous allocation block of registration serials.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "category": { "type": "string" },
+        "firstSerial": { "type": "number" },
+        "lastSerial": { "type": "number" },
+        "firstId": { "type": "string" },
+        "lastId": { "type": "string" },
+        "count": { "type": "number" },
+        "venueId": { "type": "string" },
+        "venueName": { "type": "string" },
+        "type": { "type": "string", "enum": ["school", "online", "spare"] }
+      },
+      "required": ["category", "firstSerial", "lastSerial", "firstId", "lastId", "count", "venueId"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Contestant record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string" },
+        "class": { "type": "number" },
+        "nameBn": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "fatherName": { "type": "string" },
+        "motherName": { "type": "string" },
+        "mobile": { "type": "string" },
+        "village": { "type": "string" },
+        "upazila": { "type": "string" },
+        "district": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "venueId": { "type": "string" },
+        "source": { "type": "string", "enum": ["school", "online", "walkin"] },
+        "photoPath": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "category", "class", "nameBn", "schoolName", "venueId"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Online student registration application.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nameBn": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "fatherName": { "type": "string" },
+        "motherName": { "type": "string" },
+        "class": { "type": "number" },
+        "category": { "type": "string" },
+        "mobile": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "village": { "type": "string" },
+        "upazila": { "type": "string" },
+        "district": { "type": "string" },
+        "txnId": { "type": "string" },
+        "payerMobile": { "type": "string" },
+        "screenshotPath": { "type": "string" },
+        "photoPath": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "verified", "rejected"] },
+        "reason": { "type": "string" },
+        "assignedId": { "type": "string" },
+        "verifiedBy": { "type": "string" },
+        "verifiedAt": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["nameBn", "class", "category", "mobile", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit trail record of actions performed in the system.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "at": { "type": "string" },
+        "uid": { "type": "string" },
+        "role": { "type": "string" },
+        "action": { "type": "string" },
+        "collection": { "type": "string" },
+        "docId": { "type": "string" },
+        "before": { "type": "object" },
+        "after": { "type": "object" }
+      },
+      "required": ["at", "action", "collection"]
+    }
+  },
+  "firestore": {
+    "/settings/contest": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Private administrative contest configuration."
+    },
+    "/publicSettings/contest": {
+      "schema": { "$ref": "#/entities/PublicSetting" },
+      "description": "Publicly readable sanitized contest configuration."
+    },
+    "/venues/{venueId}": {
+      "schema": { "$ref": "#/entities/Venue" },
+      "description": "Examination venues and room layouts."
+    },
+    "/schools/{schoolId}": {
+      "schema": { "$ref": "#/entities/School" },
+      "description": "Participating schools."
+    },
+    "/blocks/{blockId}": {
+      "schema": { "$ref": "#/entities/Block" },
+      "description": "Assigned registration serial blocks."
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Registered students."
+    },
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Online registration submissions."
+    },
+    "/auditLog/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "System mutation audit logs."
+    }
+  }
+}

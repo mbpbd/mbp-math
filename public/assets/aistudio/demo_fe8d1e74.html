@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MBP glass bubble menu demo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4efe6;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif}
+header{position:sticky;top:0;z-index:50;height:60px;background:#0c1d3a;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#fff;font-size:14px;font-weight:500}
+header .t{display:flex;align-items:center;gap:10px}
+.lg{width:30px;height:30px;border-radius:8px;background:#e5a03c;color:#0c1d3a;display:flex;align-items:center;justify-content:center;font-size:12px}
+main{padding:16px}main div{background:#fbf8f2;border:1px solid #e4dccb;border-radius:14px;height:90px;margin-bottom:12px}
+</style>
+<style>
+/* MBP mobile menu: floating 3D glass bubbles
+   Palette: navy #0c1d3a, amber #e5a03c. Set --mbp-header-h to your real header height. */
+:root{--mbp-navy:#0c1d3a;--mbp-amber:#e5a03c;--mbp-header-h:60px}
+
+/* Hamburger button (lines morph into an X). The header must have a higher z-index than the menu. */
+.mbp-burger{position:relative;width:40px;height:40px;padding:0;border-radius:12px;border:.5px solid #2c4470;background:transparent;cursor:pointer}
+.mbp-burger span{position:absolute;left:11px;width:18px;height:1.5px;background:#fff;transition:transform .45s cubic-bezier(.7,0,.2,1),top .45s cubic-bezier(.7,0,.2,1)}
+.mbp-burger span:nth-child(1){top:15px}
+.mbp-burger span:nth-child(2){top:23px}
+.mbp-burger.is-open span:nth-child(1){top:19px;transform:rotate(45deg)}
+.mbp-burger.is-open span:nth-child(2){top:19px;transform:rotate(-45deg)}
+
+/* Overlay */
+.mbp-menu{position:fixed;inset:0;z-index:40;overflow:hidden;pointer-events:none;visibility:hidden;transition:visibility 0s .8s}
+.mbp-menu.is-open{pointer-events:auto;visibility:visible;transition-delay:0s}
+.mbp-menu .mbp-bd{position:absolute;inset:0;opacity:0;transition:opacity .6s;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(229,160,60,.55) 0,rgba(229,160,60,0) 38%),
+    radial-gradient(circle at 85% 70%,rgba(70,130,255,.5) 0,rgba(70,130,255,0) 42%),
+    radial-gradient(circle at 30% 90%,rgba(160,90,220,.35) 0,rgba(160,90,220,0) 40%),
+    #0a1830}
+.mbp-menu.is-open .mbp-bd{opacity:1}
+.mbp-menu .mbp-pn{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+  padding:calc(var(--mbp-header-h) + 14px) 16px max(18px,env(safe-area-inset-bottom));
+  overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+/* Language switch */
+.mbp-menu .mbp-lang{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:6px;color:#a9bbdb;font-size:12px;
+  opacity:0;transform:translateY(10px);transition:opacity .5s .3s,transform .5s .3s}
+.mbp-menu.is-open .mbp-lang{opacity:1;transform:none}
+.mbp-menu .mbp-sw{position:relative;display:flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22)}
+.mbp-menu .mbp-sw button{appearance:none;-webkit-appearance:none;position:relative;z-index:1;margin:0;border:0;background:none;
+  font:inherit;font-size:12px;font-weight:500;padding:5px 12px;color:#c9d6ee;cursor:pointer;transition:color .3s}
+.mbp-menu .mbp-sw button[aria-pressed="true"]{color:#3a2400}
+.mbp-menu .mbp-sw i{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:8px;
+  background:linear-gradient(180deg,#f6c26a,#e5a03c);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.mbp-menu .mbp-sw.is-bn i{transform:translateX(100%)}
+
+/* Bubble grid */
+.mbp-menu .mbp-list{list-style:none;margin:0;padding:0;flex:1 0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-content:center;justify-items:center}
+.mbp-menu .mbp-list li{margin:0;padding:0}
+.mbp-menu .mbp-list li:nth-child(3n+2){margin-top:28px}
+.mbp-menu .mbp-list a{position:relative;display:flex;align-items:center;justify-content:center;
+  width:min(92px,100%);aspect-ratio:1/1;padding:0 10px;border-radius:50%;
+  color:#fff;font-size:13px;font-weight:500;line-height:1.2;text-align:center;text-decoration:none;overflow-wrap:anywhere;
+  text-shadow:0 1px 3px rgba(0,0,0,.45);cursor:pointer;-webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.02) 55%,rgba(255,255,255,.22) 100%),
+    radial-gradient(circle at 30% 25%,rgba(255,255,255,.35) 0,rgba(255,255,255,.08) 30%,rgba(255,255,255,0) 55%);
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:inset 0 0 14px rgba(255,255,255,.3),inset -9px -11px 18px rgba(229,160,60,.35),inset 9px 9px 16px rgba(110,160,255,.3),0 12px 22px rgba(0,0,0,.4);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;transform:translateY(200px) scale(.3);
+  transition:transform 1.1s cubic-bezier(.2,1.3,.4,1),opacity .5s}
+/* glossy highlight (top-left) and small reflection (bottom-right) */
+.mbp-menu .mbp-list a::before{content:'';position:absolute;top:9%;left:17%;width:36%;height:20%;border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.1));transform:rotate(-32deg);filter:blur(.6px);pointer-events:none}
+.mbp-menu .mbp-list a::after{content:'';position:absolute;bottom:10%;right:15%;width:18%;height:9%;border-radius:50%;
+  background:rgba(255,255,255,.35);transform:rotate(-32deg);filter:blur(1px);pointer-events:none}
+/* current page = amber glass */
+.mbp-menu .mbp-list a[aria-current="page"]{color:#3a2400;text-shadow:0 1px 1px rgba(255,255,255,.5);
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75) 0,rgba(255,214,140,.55) 32%,rgba(229,160,60,.9) 100%);
+  border-color:rgba(255,230,170,.8);
+  box-shadow:inset 0 0 14px rgba(255,255,255,.5),inset -8px -10px 16px rgba(160,90,0,.35),0 12px 24px rgba(229,160,60,.35)}
+/* Bengali labels */
+.mbp-menu[data-lang="bn"] .mbp-list a{font-size:14px;line-height:1.3}
+
+/* Rise-in with stagger, then gentle float */
+.mbp-menu.is-open .mbp-list a{opacity:1;transform:none}
+.mbp-menu.is-open .mbp-list li:nth-child(1) a{transition-delay:.30s,.30s}
+.mbp-menu.is-open .mbp-list li:nth-child(2) a{transition-delay:.38s,.38s}
+.mbp-menu.is-open .mbp-list li:nth-child(3) a{transition-delay:.46s,.46s}
+.mbp-menu.is-open .mbp-list li:nth-child(4) a{transition-delay:.54s,.54s}
+.mbp-menu.is-open .mbp-list li:nth-child(5) a{transition-delay:.62s,.62s}
+.mbp-menu.is-open .mbp-list li:nth-child(6) a{transition-delay:.70s,.70s}
+.mbp-menu.is-open .mbp-list li:nth-child(7) a{transition-delay:.78s,.78s}
+.mbp-menu.is-open .mbp-list li:nth-child(8) a{transition-delay:.86s,.86s}
+.mbp-menu.is-open .mbp-list li a:active{transform:scale(.9);transition-duration:.15s;transition-delay:0s}
+.mbp-menu.is-open .mbp-list li{animation:mbp-float 4s ease-in-out 1.6s infinite}
+.mbp-menu.is-open .mbp-list li:nth-child(even){animation-duration:5s;animation-delay:1.9s}
+.mbp-menu.is-open .mbp-list li:nth-child(3n){animation-duration:4.6s;animation-delay:1.3s}
+@keyframes mbp-float{0%,100%{transform:translate(0,0)}50%{transform:translate(3px,-9px)}}
+
+/* Tiny rising bubbles in the background */
+.mbp-menu .mbp-tb{position:absolute;bottom:-20px;border-radius:50%;opacity:0;pointer-events:none;
+  border:1px solid rgba(255,255,255,.35);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.5),rgba(255,255,255,.05) 60%)}
+.mbp-menu.is-open .mbp-tb{animation:mbp-rise 7s linear infinite}
+.mbp-menu .mbp-tb:nth-of-type(1){left:8%;width:10px;height:10px;animation-delay:.6s}
+.mbp-menu .mbp-tb:nth-of-type(2){left:30%;width:6px;height:6px;animation-delay:2.4s;animation-duration:9s}
+.mbp-menu .mbp-tb:nth-of-type(3){left:55%;width:12px;height:12px;animation-delay:1.2s;animation-duration:8s}
+.mbp-menu .mbp-tb:nth-of-type(4){left:78%;width:7px;height:7px;animation-delay:3.4s}
+.mbp-menu .mbp-tb:nth-of-type(5){left:92%;width:9px;height:9px;animation-delay:.2s;animation-duration:10s}
+@keyframes mbp-rise{0%{opacity:0;transform:translateY(0)}10%{opacity:.9}90%{opacity:.6}100%{opacity:0;transform:translateY(-110vh)}}
+
+/* Open admin panel: glass pill with white text, amber icon chip, arrow, slow shine */
+.mbp-menu .mbp-admin{flex:none;position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;
+  height:56px;margin-top:12px;padding:0 8px;border-radius:28px;
+  color:#fff !important;font-size:15px;font-weight:500;letter-spacing:.2px;text-decoration:none;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);cursor:pointer;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.06));
+  border:1px solid rgba(255,214,140,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(229,160,60,.4),0 10px 24px rgba(0,0,0,.45);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;transform:translateY(20px);
+  transition:transform .6s 1s cubic-bezier(.2,1.2,.4,1),opacity .6s 1s}
+.mbp-menu .mbp-admin[hidden]{display:none}
+.mbp-menu.is-open .mbp-admin{opacity:1;transform:none}
+.mbp-menu.is-open .mbp-admin:active{transform:scale(.97);transition-duration:.12s;transition-delay:0s}
+.mbp-menu .mbp-admin .mbp-ic{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;
+  color:#3a2400;text-shadow:none;background:radial-gradient(circle at 30% 25%,#ffe6b0,#e5a03c 72%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.8),0 3px 8px rgba(229,160,60,.55)}
+.mbp-menu .mbp-admin .mbp-tx{flex:1;text-align:left;color:#fff}
+.mbp-menu .mbp-admin .mbp-ar{flex:none;margin-right:10px;color:#ffd48a;transition:transform .3s}
+.mbp-menu .mbp-admin:hover .mbp-ar{transform:translateX(4px)}
+.mbp-menu .mbp-admin svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mbp-menu .mbp-admin .mbp-ar svg{width:18px;height:18px}
+.mbp-menu .mbp-admin::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:36%;pointer-events:none;
+  background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.4),rgba(255,255,255,0));transform:skewX(-20deg)}
+.mbp-menu.is-open .mbp-admin::after{animation:mbp-shine 4s 2s infinite}
+@keyframes mbp-shine{0%{left:-60%}35%,100%{left:130%}}
+
+/* Focus ring for keyboard users */
+.mbp-menu a:focus-visible,.mbp-menu button:focus-visible{outline:2px solid #ffd48a;outline-offset:3px}
+
+/* Respect "reduce motion" */
+@media (prefers-reduced-motion:reduce){
+  .mbp-menu *,.mbp-burger span{transition-duration:.01s !important;transition-delay:0s !important;animation:none !important}
+  .mbp-menu.is-open .mbp-list a,.mbp-menu.is-open .mbp-admin{opacity:1;transform:none}
+}
+
+</style></head><body>
+<header><div class="t"><div class="lg">MBP</div>Manipuri Biggan Projonmo</div>
+<button class="mbp-burger" id="mbpBurger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mbpMenu">
+  <span></span><span></span>
+</button>
+</header>
+<main><div></div><div></div><div></div><div></div><div></div><div></div></main>
+<nav> once, directly inside <body> (outside the header). -->
+
+<button class="mbp-burger" id="mbpBurger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mbpMenu">
+  <span></span><span></span>
+</button>
+
+<nav class="mbp-menu" id="mbpMenu" aria-label="Main menu" aria-hidden="true" data-lang="en">
+  <div class="mbp-bd"></div>
+  <i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i>
+  <div class="mbp-pn">
+    <div class="mbp-lang">
+      <span>Language</span>
+      <div class="mbp-sw" id="mbpSw" role="group" aria-label="Language">
+        <i></i>
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
+      </div>
+    </div>
+
+    <ul class="mbp-list">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/notices">Notices</a></li>
+      <li><a href="/mbp-life">MBP Life</a></li>
+      <li><a href="/trainings">Trainings</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+
+    <a class="mbp-admin" href="/admin">
+      <span class="mbp-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06"/><path d="M15 19l2 2l4 -4"/></svg></span>
+      <span class="mbp-tx">Open admin panel</span>
+      <span class="mbp-ar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg></span>
+    </a>
+  </div>
+</nav>
+
+<script>
+/* MBP mobile menu: vanilla JS. Works with any framework or plain HTML. */
+(function () {
+  var burger = document.getElementById('mbpBurger');
+  var menu = document.getElementById('mbpMenu');
+  var sw = document.getElementById('mbpSw');
+  if (!burger || !menu) return;
+
+  function setOpen(open) {
+    menu.classList.toggle('is-open', open);
+    burger.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.setAttribute('aria-hidden', String(!open));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      setTimeout(function () { var a = menu.querySelector('.mbp-list a'); if (a) a.focus({ preventScroll: true }); }, 450);
+    }
+  }
+
+  burger.addEventListener('click', function () { setOpen(!menu.classList.contains('is-open')); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) { setOpen(false); burger.focus(); }
+  });
+  menu.querySelectorAll('.mbp-list a, .mbp-admin').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
+
+  /* Mark the current page (amber bubble). Works for normal links; for SPA routers set aria-current yourself. */
+  var path = location.pathname.replace(/\/+$/, '') || '/';
+  menu.querySelectorAll('.mbp-list a').forEach(function (a) {
+    var p = new URL(a.href, location.origin).pathname.replace(/\/+$/, '') || '/';
+    if (p === path) a.setAttribute('aria-current', 'page');
+  });
+
+  /* Language switch: connect this event to your existing EN/বাংলা logic. */
+  if (sw) {
+    sw.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.dataset.lang;
+        sw.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        sw.classList.toggle('is-bn', lang === 'bn');
+        menu.dataset.lang = lang;
+        document.dispatchEvent(new CustomEvent('mbp:lang', { detail: { lang: lang } }));
+      });
+    });
+  }
+})();
+
+</script></body></html>

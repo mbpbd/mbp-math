@@ -1,0 +1,118 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny-all safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email == 'mbprojonmo@gmail.com';
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email_verified == true && (
+          isSuperAdmin() ||
+          request.auth.token.email in [
+            'swarupks.eee@gmail.com',
+            'sinha.brojen3@gmail.com',
+            'Sinha.brojen3@gmail.com',
+            'kiransingha134@gmail.com',
+            'sayaksinha997@gmail.com',
+            'adityasingha659@gmail.com',
+            'itsmechemicalarko@gmail.com',
+            'bipulsinha1994cu@gmail.com',
+            'soumit.srt88@gmail.com',
+            'mbprojonmo@gmail.com'
+          ]
+        );
+    }
+
+    // 1. Settings & Public Settings
+    match /settings/{docId} {
+      allow read, write: if true;
+    }
+
+    match /publicSettings/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /stats/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 2. Venues & Rooms
+    match /venues/{venueId} {
+      allow read, write: if true;
+    }
+
+    // 3. Schools & PINs
+    match /schools/{schoolId} {
+      allow read, write: if true;
+    }
+
+    // 4. Blocks
+    match /blocks/{blockId} {
+      allow read, write: if true;
+    }
+
+    // 5. Students Directory & Results
+    match /students/{studentId} {
+      allow read, write: if true;
+    }
+
+    // 6. Online Applications (bKash Payments)
+    match /applications/{appId} {
+      allow read, write: if true;
+    }
+
+    // 7. Teacher Panel Marked Seats
+    match /teacher_marks/{docId} {
+      allow read, write: if true;
+    }
+
+    // 8. Seat Plans
+    match /seatPlans/{venueId} {
+      allow read, write: if true;
+    }
+
+    // 9. Attendance
+    match /attendance/{studentId} {
+      allow read, write: if true;
+    }
+
+    // 10. Marks & Results
+    match /marks/{studentId} {
+      allow read, write: if true;
+    }
+
+    match /results/{studentId} {
+      allow read, write: if true;
+    }
+
+    // 11. SMS Log & Audit
+    match /smsLog/{logId} {
+      allow read, write: if true;
+    }
+
+    match /auditLog/{logId} {
+      allow read, write: if true;
+    }
+
+    // 12. Users
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}

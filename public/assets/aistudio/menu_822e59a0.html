@@ -1,0 +1,37 @@
+<!-- Put the burger inside your header. Put the <nav> once, directly inside <body> (outside the header). -->
+
+<button class="mbp-burger" id="mbpBurger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mbpMenu">
+  <span></span><span></span>
+</button>
+
+<nav class="mbp-menu" id="mbpMenu" aria-label="Main menu" aria-hidden="true" data-lang="en">
+  <div class="mbp-bd"></div>
+  <i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i><i class="mbp-tb"></i>
+  <div class="mbp-pn">
+    <div class="mbp-lang">
+      <span>Language</span>
+      <div class="mbp-sw" id="mbpSw" role="group" aria-label="Language">
+        <i></i>
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
+      </div>
+    </div>
+
+    <ul class="mbp-list">
+      <li><a href="/">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/notices">Notices</a></li>
+      <li><a href="/mbp-life">MBP Life</a></li>
+      <li><a href="/trainings">Trainings</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+
+    <a class="mbp-admin" href="/admin">
+      <span class="mbp-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06"/><path d="M15 19l2 2l4 -4"/></svg></span>
+      <span class="mbp-tx">Open admin panel</span>
+      <span class="mbp-ar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg></span>
+    </a>
+  </div>
+</nav>

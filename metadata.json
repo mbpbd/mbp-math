@@ -1,0 +1,8 @@
+{
+  "name": "MBP Math Quiz Management System",
+  "description": "Comprehensive contest management platform for Manipuri Biggan Projonmo Math Quiz Contest 2026 covering registration, tracking, seat plan, attendance, results, and certificates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
